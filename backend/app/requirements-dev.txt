@@ -1,0 +1,16 @@
+# Development and test dependencies for the Django backend.
+# Installs production dependencies first, then adds dev tooling.
+#
+# Install with: pip install -r requirements-dev.txt
+# (Do NOT use this file in production images.)
+
+-r requirements.txt
+
+# Testing
+pytest>=8.0
+pytest-django>=4.8
+pytest-cov>=4.1
+
+# Optional dev tooling (uncomment as needed):
+# django-debug-toolbar>=4.0
+# Ruff, Black, isort, mypy can be added here later.

@@ -1,0 +1,8 @@
+[coverage:run]
+source = tasks_app
+branch = True
+omit = **/tests/**,**/__pycache__/**,**/migrations/**
+
+[run]
+branch = True
+source = tasks_app

@@ -1,0 +1,7 @@
+# Python bytecode, venv, etc. are git-ignored via root .gitignore
+*.pyc
+__pycache__
+db.sqlite3
+staticfiles
+media
+.env
