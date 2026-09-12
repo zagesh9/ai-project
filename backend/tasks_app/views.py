@@ -237,7 +237,8 @@ class DashboardView(views.APIView):
             assignee=user,
             board__project__owner=user,
             due_date__lt=date.today(),
-            status__ne=Task.Status.DONE,
+        ).exclude(
+            status=Task.Status.DONE
         ).count()
 
         recent_tasks = (
