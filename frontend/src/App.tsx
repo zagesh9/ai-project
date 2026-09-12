@@ -25,8 +25,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <div className="min-h-screen bg-gray-50">
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">
@@ -83,7 +83,7 @@ export default function App() {
             </Routes>
           </main>
         </div>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
