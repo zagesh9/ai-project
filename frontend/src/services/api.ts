@@ -1,9 +1,7 @@
-"""
-API client setup.
-
-Uses Axios with an interceptor that attaches the JWT access token from
-localStorage on every request, and redirects to /login on 401.
-"""
+// API client setup.
+//
+// Uses Axios with an interceptor that attaches the JWT access token from
+// localStorage on every request, and redirects to /login on 401.
 
 import axios from "axios";
 
