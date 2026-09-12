@@ -51,8 +51,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = useCallback(
     async (data: RegisterPayload) => {
       const { data: user } = await authApi.register(data);
-      localStorage.setItem("accessToken", "");
-      localStorage.setItem("refreshToken", "");
+      // After registration we don't have tokens — user must log in.
+      // Store minimal user info for the dashboard redirect; clear any stale tokens.
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       setUser(user);
       navigate("/dashboard");
     },

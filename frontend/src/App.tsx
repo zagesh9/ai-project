@@ -1,6 +1,7 @@
 // Main App — routing + auth guard.
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Header from "./components/Header";
 import LoginPage from "./pages/LoginPage";
@@ -8,6 +9,15 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import BoardsPage from "./pages/BoardsPage";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 30_000,
+    },
+  },
+});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -26,7 +36,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
         <div className="min-h-screen bg-gray-50">
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">
@@ -84,6 +95,7 @@ export default function App() {
           </main>
         </div>
       </AuthProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }
