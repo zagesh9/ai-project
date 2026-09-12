@@ -12,9 +12,9 @@ export default function ProjectsPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  const { data: projects, isLoading, error } = useQuery({
+  const { data: projectsResponse, isLoading, error } = useQuery({
     queryKey: ["projects"],
-    queryFn: () => projectApi.list().then((r) => r.data),
+    queryFn: () => projectApi.list().then((r) => r.data.results ?? r.data),
   });
 
   const createMutation = useMutation({
@@ -50,7 +50,7 @@ export default function ProjectsPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Projects</h1>
           <p className="text-gray-600">
-            {projects?.length ?? 0} project{projects?.length !== 1 ? "s" : ""}
+            {projectsResponse?.length ?? 0} project{projectsResponse?.length !== 1 ? "s" : ""}
           </p>
         </div>
         <button
@@ -106,7 +106,7 @@ export default function ProjectsPage() {
         </form>
       )}
 
-      {(!projects || projects.length === 0) ? (
+      {(!projectsResponse || projectsResponse.length === 0) ? (
         <div className="text-center py-12 bg-white rounded-lg shadow border">
           <p className="text-gray-500 mb-4">No projects yet.</p>
           <button
@@ -118,7 +118,7 @@ export default function ProjectsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project: Project) => (
+          {projectsResponse.map((project: Project) => (
             <div
               key={project.id}
               className="bg-white rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer border"
