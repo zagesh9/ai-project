@@ -25,14 +25,19 @@ api.interceptors.request.use((config) => {
 });
 
 // On 401, clear stored tokens and let the auth context handle redirect.
+// Skip redirect for /auth/me/ — that endpoint is called during session
+// restore to check if a user is logged in; a 401 there just means "no session".
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
+      const isMeCheck = error.config?.url?.endsWith("/auth/me/");
+      if (!isMeCheck) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
       }
     }
     return Promise.reject(error);
