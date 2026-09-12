@@ -18,24 +18,26 @@ export default function BoardsPage() {
   const queryClient = useQueryClient();
   const projectIdNum = Number(projectId);
 
-  const { data: boards, isLoading: boardsLoading } = useQuery({
+  const { data: boardsResponse, isLoading: boardsLoading } = useQuery({
     queryKey: ["boards", projectIdNum],
-    queryFn: () => boardApi.list(projectIdNum),
+    queryFn: () =>
+      boardApi.list(projectIdNum).then((r) => r.data.results ?? r.data),
   });
 
   const [activeBoardId, setActiveBoardId] = useState<number | null>(
-    boards?.data?.[0]?.id ?? null,
+    boardsResponse?.[0]?.id ?? null,
   );
 
   const tasksQuery = activeBoardId
     ? useQuery({
         queryKey: ["tasks", activeBoardId],
-        queryFn: () => taskApi.list(activeBoardId),
+        queryFn: () =>
+          taskApi.list(activeBoardId).then((r) => r.data.results ?? r.data),
       })
     : null;
 
   const isTasksLoading = tasksQuery?.isLoading ?? false;
-  const tasks = tasksQuery?.data?.data ?? [];
+  const tasks = tasksQuery?.data ?? [];
   const tasksError = tasksQuery?.error;
 
   const createBoardMutation = useMutation({
@@ -91,10 +93,10 @@ export default function BoardsPage() {
     assignee_id: null,
   });
 
-  const activeBoard = boards?.data?.find((b: Board) => b.id === activeBoardId);
+  const activeBoard = boardsResponse?.find((b: Board) => b.id === activeBoardId);
 
   if (boardsLoading) return <div className="p-8">Loading boards...</div>;
-  if (!boards?.data?.length) {
+  if (!boardsResponse?.length) {
     return (
       <div className="p-8">
         <div className="text-center py-12 bg-white rounded-lg shadow border">
@@ -130,7 +132,7 @@ export default function BoardsPage() {
           </button>
         </div>
         <div className="p-2">
-          {boards?.data?.map((board: Board) => (
+          {boardsResponse?.map((board: Board) => (
             <div
               key={board.id}
               className={`group flex items-center gap-2 p-2 rounded-md cursor-pointer mb-1 ${
